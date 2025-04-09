@@ -1,0 +1,11 @@
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\bin\Debug\LibraryManagement.exe.config
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\bin\Debug\LibraryManagement.exe
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\bin\Debug\LibraryManagement.pdb
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.csproj.AssemblyReference.cache
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.Dashboard.resources
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.Form1.resources
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.Properties.Resources.resources
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.csproj.GenerateResource.cache
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.csproj.CoreCompileInputs.cache
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.exe
+C:\Users\vthuy\source\repos\LibraryManagement\LibraryManagement\obj\Debug\LibraryManagement.pdb
