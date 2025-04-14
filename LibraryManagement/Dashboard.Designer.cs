@@ -50,6 +50,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.BtnDelete = new System.Windows.Forms.Button();
             this.dateTimeto = new System.Windows.Forms.DateTimePicker();
             this.label8 = new System.Windows.Forms.Label();
             this.dateTimefrom = new System.Windows.Forms.DateTimePicker();
@@ -57,7 +58,17 @@
             this.btnLatest = new System.Windows.Forms.Button();
             this.BtnOldest = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.BtnDelete = new System.Windows.Forms.Button();
+            this.booktitle_right = new System.Windows.Forms.TextBox();
+            this.label_btitle = new System.Windows.Forms.Label();
+            this.author_right = new System.Windows.Forms.TextBox();
+            this.lb_author = new System.Windows.Forms.Label();
+            this.Category_right = new System.Windows.Forms.TextBox();
+            this.lb_Cat = new System.Windows.Forms.Label();
+            this.filter = new System.Windows.Forms.Button();
+            this.radio_title = new System.Windows.Forms.RadioButton();
+            this.radio_author = new System.Windows.Forms.RadioButton();
+            this.radio_category = new System.Windows.Forms.RadioButton();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.booksTable)).BeginInit();
@@ -339,6 +350,17 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.radio_category);
+            this.panel2.Controls.Add(this.radio_author);
+            this.panel2.Controls.Add(this.radio_title);
+            this.panel2.Controls.Add(this.filter);
+            this.panel2.Controls.Add(this.Category_right);
+            this.panel2.Controls.Add(this.lb_Cat);
+            this.panel2.Controls.Add(this.author_right);
+            this.panel2.Controls.Add(this.lb_author);
+            this.panel2.Controls.Add(this.booktitle_right);
+            this.panel2.Controls.Add(this.label_btitle);
             this.panel2.Controls.Add(this.BtnDelete);
             this.panel2.Controls.Add(this.dateTimeto);
             this.panel2.Controls.Add(this.label8);
@@ -353,11 +375,28 @@
             this.panel2.TabIndex = 3;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
+            // BtnDelete
+            // 
+            this.BtnDelete.BackColor = System.Drawing.Color.SeaGreen;
+            this.BtnDelete.FlatAppearance.BorderSize = 0;
+            this.BtnDelete.FlatAppearance.CheckedBackColor = System.Drawing.Color.MediumSeaGreen;
+            this.BtnDelete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MediumSeaGreen;
+            this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnDelete.ForeColor = System.Drawing.Color.OldLace;
+            this.BtnDelete.Location = new System.Drawing.Point(165, 429);
+            this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
+            this.BtnDelete.Name = "BtnDelete";
+            this.BtnDelete.Size = new System.Drawing.Size(92, 43);
+            this.BtnDelete.TabIndex = 21;
+            this.BtnDelete.Text = "Delete";
+            this.BtnDelete.UseVisualStyleBackColor = false;
+            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
+            // 
             // dateTimeto
             // 
             this.dateTimeto.CalendarForeColor = System.Drawing.Color.ForestGreen;
             this.dateTimeto.CalendarMonthBackground = System.Drawing.Color.OldLace;
-            this.dateTimeto.Location = new System.Drawing.Point(73, 398);
+            this.dateTimeto.Location = new System.Drawing.Point(67, 382);
             this.dateTimeto.Name = "dateTimeto";
             this.dateTimeto.Size = new System.Drawing.Size(213, 26);
             this.dateTimeto.TabIndex = 20;
@@ -368,7 +407,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.SeaGreen;
-            this.label8.Location = new System.Drawing.Point(12, 398);
+            this.label8.Location = new System.Drawing.Point(6, 382);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(42, 25);
             this.label8.TabIndex = 19;
@@ -378,7 +417,7 @@
             // 
             this.dateTimefrom.CalendarForeColor = System.Drawing.Color.ForestGreen;
             this.dateTimefrom.CalendarMonthBackground = System.Drawing.Color.OldLace;
-            this.dateTimefrom.Location = new System.Drawing.Point(73, 355);
+            this.dateTimefrom.Location = new System.Drawing.Point(67, 339);
             this.dateTimefrom.Name = "dateTimefrom";
             this.dateTimefrom.Size = new System.Drawing.Size(213, 26);
             this.dateTimefrom.TabIndex = 17;
@@ -389,7 +428,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.SeaGreen;
-            this.label7.Location = new System.Drawing.Point(12, 355);
+            this.label7.Location = new System.Drawing.Point(6, 339);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(68, 25);
             this.label7.TabIndex = 16;
@@ -437,7 +476,7 @@
             this.btnSearch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MediumSeaGreen;
             this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSearch.ForeColor = System.Drawing.Color.OldLace;
-            this.btnSearch.Location = new System.Drawing.Point(36, 17);
+            this.btnSearch.Location = new System.Drawing.Point(36, 429);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(0);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(92, 43);
@@ -446,22 +485,142 @@
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // BtnDelete
+            // booktitle_right
             // 
-            this.BtnDelete.BackColor = System.Drawing.Color.SeaGreen;
-            this.BtnDelete.FlatAppearance.BorderSize = 0;
-            this.BtnDelete.FlatAppearance.CheckedBackColor = System.Drawing.Color.MediumSeaGreen;
-            this.BtnDelete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MediumSeaGreen;
-            this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnDelete.ForeColor = System.Drawing.Color.OldLace;
-            this.BtnDelete.Location = new System.Drawing.Point(165, 17);
-            this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
-            this.BtnDelete.Name = "BtnDelete";
-            this.BtnDelete.Size = new System.Drawing.Size(92, 43);
-            this.BtnDelete.TabIndex = 21;
-            this.BtnDelete.Text = "Delete";
-            this.BtnDelete.UseVisualStyleBackColor = false;
-            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
+            this.booktitle_right.BackColor = System.Drawing.Color.OldLace;
+            this.booktitle_right.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.booktitle_right.ForeColor = System.Drawing.Color.SeaGreen;
+            this.booktitle_right.Location = new System.Drawing.Point(122, 91);
+            this.booktitle_right.Name = "booktitle_right";
+            this.booktitle_right.Size = new System.Drawing.Size(158, 30);
+            this.booktitle_right.TabIndex = 17;
+            this.booktitle_right.TextChanged += new System.EventHandler(this.booktitle_right_TextChanged);
+            // 
+            // label_btitle
+            // 
+            this.label_btitle.AutoSize = true;
+            this.label_btitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_btitle.ForeColor = System.Drawing.Color.SeaGreen;
+            this.label_btitle.Location = new System.Drawing.Point(18, 91);
+            this.label_btitle.Name = "label_btitle";
+            this.label_btitle.Size = new System.Drawing.Size(102, 25);
+            this.label_btitle.TabIndex = 16;
+            this.label_btitle.Text = "Book title: ";
+            // 
+            // author_right
+            // 
+            this.author_right.BackColor = System.Drawing.Color.OldLace;
+            this.author_right.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.author_right.ForeColor = System.Drawing.Color.SeaGreen;
+            this.author_right.Location = new System.Drawing.Point(122, 154);
+            this.author_right.Name = "author_right";
+            this.author_right.Size = new System.Drawing.Size(158, 30);
+            this.author_right.TabIndex = 23;
+            this.author_right.TextChanged += new System.EventHandler(this.author_right_TextChanged);
+            // 
+            // lb_author
+            // 
+            this.lb_author.AutoSize = true;
+            this.lb_author.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_author.ForeColor = System.Drawing.Color.SeaGreen;
+            this.lb_author.Location = new System.Drawing.Point(18, 154);
+            this.lb_author.Name = "lb_author";
+            this.lb_author.Size = new System.Drawing.Size(81, 25);
+            this.lb_author.TabIndex = 22;
+            this.lb_author.Text = "Author: ";
+            // 
+            // Category_right
+            // 
+            this.Category_right.BackColor = System.Drawing.Color.OldLace;
+            this.Category_right.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Category_right.ForeColor = System.Drawing.Color.SeaGreen;
+            this.Category_right.Location = new System.Drawing.Point(122, 211);
+            this.Category_right.Name = "Category_right";
+            this.Category_right.Size = new System.Drawing.Size(158, 30);
+            this.Category_right.TabIndex = 25;
+            this.Category_right.TextChanged += new System.EventHandler(this.Category_right_TextChanged);
+            // 
+            // lb_Cat
+            // 
+            this.lb_Cat.AutoSize = true;
+            this.lb_Cat.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_Cat.ForeColor = System.Drawing.Color.SeaGreen;
+            this.lb_Cat.Location = new System.Drawing.Point(18, 211);
+            this.lb_Cat.Name = "lb_Cat";
+            this.lb_Cat.Size = new System.Drawing.Size(103, 25);
+            this.lb_Cat.TabIndex = 24;
+            this.lb_Cat.Text = "Category: ";
+            this.lb_Cat.Click += new System.EventHandler(this.lb_Cat_Click);
+            // 
+            // filter
+            // 
+            this.filter.BackColor = System.Drawing.Color.SeaGreen;
+            this.filter.FlatAppearance.BorderSize = 0;
+            this.filter.FlatAppearance.CheckedBackColor = System.Drawing.Color.MediumSeaGreen;
+            this.filter.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MediumSeaGreen;
+            this.filter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filter.ForeColor = System.Drawing.Color.OldLace;
+            this.filter.Location = new System.Drawing.Point(103, 13);
+            this.filter.Margin = new System.Windows.Forms.Padding(0);
+            this.filter.Name = "filter";
+            this.filter.Size = new System.Drawing.Size(92, 43);
+            this.filter.TabIndex = 26;
+            this.filter.Text = "Filter";
+            this.filter.UseVisualStyleBackColor = false;
+            this.filter.Click += new System.EventHandler(this.filter_Click);
+            // 
+            // radio_title
+            // 
+            this.radio_title.AutoSize = true;
+            this.radio_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radio_title.ForeColor = System.Drawing.Color.SeaGreen;
+            this.radio_title.Location = new System.Drawing.Point(23, 527);
+            this.radio_title.Name = "radio_title";
+            this.radio_title.Size = new System.Drawing.Size(126, 26);
+            this.radio_title.TabIndex = 27;
+            this.radio_title.TabStop = true;
+            this.radio_title.Text = "Book Title";
+            this.radio_title.UseVisualStyleBackColor = true;
+            this.radio_title.CheckedChanged += new System.EventHandler(this.radio_title_CheckedChanged);
+            // 
+            // radio_author
+            // 
+            this.radio_author.AutoSize = true;
+            this.radio_author.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radio_author.ForeColor = System.Drawing.Color.SeaGreen;
+            this.radio_author.Location = new System.Drawing.Point(165, 527);
+            this.radio_author.Name = "radio_author";
+            this.radio_author.Size = new System.Drawing.Size(94, 26);
+            this.radio_author.TabIndex = 28;
+            this.radio_author.TabStop = true;
+            this.radio_author.Text = "Author";
+            this.radio_author.UseVisualStyleBackColor = true;
+            this.radio_author.CheckedChanged += new System.EventHandler(this.radio_author_CheckedChanged);
+            // 
+            // radio_category
+            // 
+            this.radio_category.AutoSize = true;
+            this.radio_category.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radio_category.ForeColor = System.Drawing.Color.SeaGreen;
+            this.radio_category.Location = new System.Drawing.Point(23, 563);
+            this.radio_category.Name = "radio_category";
+            this.radio_category.Size = new System.Drawing.Size(116, 26);
+            this.radio_category.TabIndex = 29;
+            this.radio_category.TabStop = true;
+            this.radio_category.Text = "Category";
+            this.radio_category.UseVisualStyleBackColor = true;
+            this.radio_category.CheckedChanged += new System.EventHandler(this.radio_category_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.SeaGreen;
+            this.label9.Location = new System.Drawing.Point(117, 493);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(74, 25);
+            this.label9.TabIndex = 30;
+            this.label9.Text = "Sort by";
             // 
             // Dashboard
             // 
@@ -516,5 +675,16 @@
         private System.Windows.Forms.DateTimePicker dateTimefrom;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button BtnDelete;
+        private System.Windows.Forms.TextBox Category_right;
+        private System.Windows.Forms.Label lb_Cat;
+        private System.Windows.Forms.TextBox author_right;
+        private System.Windows.Forms.Label lb_author;
+        private System.Windows.Forms.TextBox booktitle_right;
+        private System.Windows.Forms.Label label_btitle;
+        private System.Windows.Forms.Button filter;
+        private System.Windows.Forms.RadioButton radio_title;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.RadioButton radio_category;
+        private System.Windows.Forms.RadioButton radio_author;
     }
 }

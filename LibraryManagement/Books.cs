@@ -153,6 +153,21 @@ namespace LibraryManagement
                 Right.PrintInRange(from, to, action);
         }
 
+        public void FilterBooks(string title, string author, string category, Action<Books> action)
+        {
+            if (Left != null) Left.FilterBooks(title, author, category, action);
+
+            bool matchTitle = string.IsNullOrEmpty(title) || Name.IndexOf(title, StringComparison.OrdinalIgnoreCase) >= 0;
+            bool matchAuthor = string.IsNullOrEmpty(author) || Author.IndexOf(author, StringComparison.OrdinalIgnoreCase) >= 0;
+            bool matchCategory = string.IsNullOrEmpty(category) || Category.IndexOf(category, StringComparison.OrdinalIgnoreCase) >= 0;
+
+            if (matchTitle && matchAuthor && matchCategory)
+                action(this);
+
+            if (Right != null) Right.FilterBooks(title, author, category, action);
+        }
+        
+
 
 
 
