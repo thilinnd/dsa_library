@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace LibraryManagement.Repositories
 {
@@ -87,5 +88,18 @@ namespace LibraryManagement.Repositories
             }
         }
 
+        public void DeleteBooksInRange(DateTime from, DateTime to)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "DELETE FROM Books WHERE Timestamp >= @From AND Timestamp <= @To";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@From", from);
+                command.Parameters.AddWithValue("@To", to);
+
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

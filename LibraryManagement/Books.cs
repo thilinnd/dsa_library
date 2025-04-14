@@ -119,6 +119,41 @@ namespace LibraryManagement
             return current;
         }
 
+        public Books DeleteInRange(DateTime from, DateTime to)
+        {
+            if (this == null)
+                return null;
+
+            // Xử lý cây con bên trái
+            if (Left != null)
+                Left = Left.DeleteInRange(from, to);
+
+            // Xử lý cây con bên phải
+            if (Right != null)
+                Right = Right.DeleteInRange(from, to);
+
+            // Nếu timestamp nằm trong khoảng cần xóa
+            if (Timestamp >= from && Timestamp <= to)
+            {
+                return this.Delete(BookID, Timestamp);
+            }
+
+            return this;
+        }
+
+        public void PrintInRange(DateTime from, DateTime to, Action<Books> action)
+        {
+            if (Left != null && this.Timestamp > from)
+                Left.PrintInRange(from, to, action);
+
+            if (this.Timestamp >= from && this.Timestamp <= to)
+                action(this);
+
+            if (Right != null && this.Timestamp < to)
+                Right.PrintInRange(from, to, action);
+        }
+
+
 
 
     }

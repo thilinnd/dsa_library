@@ -255,58 +255,13 @@ namespace LibraryManagement
 
         }
 
-        private void SearchBooksInRange(Books node, DateTime from, DateTime to)
-        {
-            if (node == null) return;
-
-            // So sánh ngày (không cần quan tâm giờ)
-            if (node.Timestamp.Date > from)
-                SearchBooksInRange(node.Left, from, to);
-
-            if (node.Timestamp.Date >= from && node.Timestamp.Date <= to)
-            {
-                var row = dataTable.NewRow();
-                row["BookID"] = node.BookID;
-                row["Timestamp"] = node.Timestamp.ToString("yyyy-MM-dd");
-                row["Name"] = node.Name;
-                row["Author"] = node.Author;
-                row["Category"] = node.Category;
-                dataTable.Rows.Add(row);
-            }
-
-            if (node.Timestamp.Date < to)
-                SearchBooksInRange(node.Right, from, to);
-        }
-
-
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            if (bstRoot == null)
-            {
-                MessageBox.Show("Không có dữ liệu trong BST.");
-                return;
-            }
-
-            DateTime fromDate = dateTimefrom.Value.Date;
-            DateTime toDate = dateTimeto.Value.Date;
-
-            // KHÔNG cần cộng thêm giờ/phút vì Timestamp đã là ngày
-            dataTable.Clear();
-            SearchBooksInRange(bstRoot, fromDate, toDate);
-
-            if (dataTable.Rows.Count == 0)
-            {
-                MessageBox.Show("Không có sách nào trong khoảng thời gian đã chọn.");
-            }
-        }
-
         private void BtnOldest_Click(object sender, EventArgs e)
         {
             if (bstRoot != null)
             {
                 var oldest = bstRoot.FindOldest();
 
-                dataTable.Clear(); // Xóa dữ liệu cũ
+                dataTable.Clear(); 
 
                 var row = dataTable.NewRow();
                 row["BookID"] = oldest.BookID;
@@ -346,6 +301,62 @@ namespace LibraryManagement
         private void dateTimeto_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            DateTime from = dateTimefrom.Value.Date;
+            DateTime to = dateTimeto.Value.Date;
+
+            if (from > to)
+            {
+                MessageBox.Show("Ngày bắt đầu phải trước ngày kết thúc.");
+                return;
+            }
+
+            // Xóa dữ liệu cũ
+            dataTable.Clear();
+
+            if (bstRoot != null)
+            {
+                bstRoot.PrintInRange(from, to, book =>
+                {
+                    var row = dataTable.NewRow();
+                    row["BookID"] = book.BookID;
+                    row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                    row["Name"] = book.Name;
+                    row["Author"] = book.Author;
+                    row["Category"] = book.Category;
+                    dataTable.Rows.Add(row);
+                });
+            }
+            else
+            {
+                MessageBox.Show("Không có sách nào trong cây.");
+            }
+
+
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            DateTime from = dateTimefrom.Value.Date;
+            DateTime to = dateTimeto.Value.Date;
+
+            if (from > to)
+            {
+                MessageBox.Show("Ngày bắt đầu phải trước ngày kết thúc.");
+                return;
+            }
+
+            // Xóa trong database
+            var repo = new ClientReposity();
+            repo.DeleteBooksInRange(from, to);
+
+            // Load lại dữ liệu và cập nhật lại BST
+            LoadData();
+
+            MessageBox.Show("Đã xóa sách trong khoảng thời gian.");
         }
     }
 }
