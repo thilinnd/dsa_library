@@ -14,20 +14,36 @@ namespace LibraryManagement
 {
     public partial class Dashboard : UserControl
     {
+        private DataTable dataTable;
+        private Books bstRoot;
+        private string currentBookID = "";
+        private string currentName = "";
+        private string currentAuthor = "";
+        private string currentCategory = "";
+        private DateTime currentDate = DateTime.Now;
+
         public Dashboard()
         {
             InitializeComponent();
-            Dashboard_Load();
+            InitializeDataTable();
         }
 
-        private void Dashboard_Load()
+        private void InitializeDataTable()
         {
-            DataTable dataTable = new DataTable();
+            dataTable = new DataTable();
             dataTable.Columns.Add("BookID");
             dataTable.Columns.Add("Timestamp");
             dataTable.Columns.Add("Name");
             dataTable.Columns.Add("Author");
             dataTable.Columns.Add("Category");
+
+            this.booksTable.DataSource = dataTable;
+        }
+
+        private void LoadData()
+        {
+            dataTable.Clear();
+            bstRoot = null;
 
             var repo = new ClientReposity();
             var books = repo.GetAllBooks();
@@ -36,89 +52,200 @@ namespace LibraryManagement
             {
                 var row = dataTable.NewRow();
                 row["BookID"] = book.BookID;
-                row["Timestamp"] = book.Timestamp;
+                row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
                 row["Name"] = book.Name;
                 row["Author"] = book.Author;
                 row["Category"] = book.Category;
                 dataTable.Rows.Add(row);
+
+                if (bstRoot == null)
+                    bstRoot = new Books(book.BookID, book.Timestamp, book.Name, book.Author, book.Category);
+                else
+                    bstRoot.Insert(book);
             }
-
-            this.booksTable.DataSource = dataTable;
-
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void booksTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = booksTable.Rows[e.RowIndex];
+                currentBookID = row.Cells["BookID"].Value.ToString();
+                currentName = row.Cells["Name"].Value.ToString();
+                currentAuthor = row.Cells["Author"].Value.ToString();
+                currentCategory = row.Cells["Category"].Value.ToString();
+                currentDate = DateTime.Parse(row.Cells["Timestamp"].Value.ToString());
 
+                // Đồng bộ dữ liệu lên các textbox
+                db_bookID.Text = currentBookID;
+                db_title.Text = currentName;
+                db_author.Text = currentAuthor;
+                db_category.Text = currentCategory;
+                db_published.Value = currentDate;
+            }
         }
 
-        private void panel3_Paint(object sender, PaintEventArgs e)
+        /* ---------------- text box & picker ---------------- */
+        private void db_bookID_TextChanged(object sender, EventArgs e)
         {
-
+            currentBookID = db_bookID.Text.Trim();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void booktitle_TextChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
+            currentName = db_title.Text.Trim();
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-
+            currentDate = db_published.Value;
         }
 
-        private void db_return_Click(object sender, EventArgs e)
+        private void db_author_TextChanged(object sender, EventArgs e)
         {
-
+            currentAuthor = db_author.Text.Trim();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void db_category_TextChanged(object sender, EventArgs e)
         {
-
+            currentCategory = db_category.Text.Trim();
         }
 
-        private void db_bookID_TextChanged(object sender, EventArgs e)
+        /* ---------------- button ---------------- */
+        private void Load_Click(object sender, EventArgs e)
         {
-
+            LoadData();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void sort_Click(object sender, EventArgs e)
         {
+            if (bstRoot == null)
+            {
+                MessageBox.Show("Vui lòng nhấn Load trước khi sắp xếp.");
+                return;
+            }
+
+            dataTable.Clear();
+
+            bstRoot.InOrderTraversal(b =>
+            {
+                var row = dataTable.NewRow();
+                row["BookID"] = b.BookID;
+                row["Timestamp"] = b.Timestamp.ToString("yyyy-MM-dd");
+                row["Name"] = b.Name;
+                row["Author"] = b.Author;
+                row["Category"] = b.Category;
+                dataTable.Rows.Add(row);
+            });
         }
+
+        private void addbook_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(currentName))
+            {
+                MessageBox.Show("Vui lòng nhập Tên sách!");
+                return;
+            }
+
+            DateTime timestamp = db_published.Value; // Giữ ở dạng DateTime
+
+            Books newBook = new Books("", timestamp, currentName, currentAuthor, currentCategory);
+
+            var repo = new ClientReposity();
+            repo.AddBook(newBook);
+
+            MessageBox.Show("Đã thêm sách thành công!");
+            Load_Click(sender, e);
+        }
+
+
+        private void update_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(currentBookID))
+            {
+                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần cập nhật!");
+                return;
+            }
+
+            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn cập nhật sách này?",
+                                                "Xác nhận cập nhật",
+                                                MessageBoxButtons.YesNo);
+            if (confirmResult != DialogResult.Yes)
+                return;
+
+            // Lấy dữ liệu mới từ form
+            DateTime newTimestamp = db_published.Value;
+
+            Books updatedBook = new Books(
+                currentBookID,
+                newTimestamp,
+                currentName,
+                currentAuthor,
+                currentCategory
+            );
+
+            // Cập nhật trong CSDL
+            var repo = new ClientReposity();
+            repo.UpdateBook(updatedBook);
+
+            // Cập nhật trong BST:
+            if (bstRoot != null)
+            {
+                bstRoot = bstRoot.Delete(currentBookID, currentDate);
+
+                bstRoot.Insert(updatedBook);
+            }
+
+            MessageBox.Show("Cập nhật sách thành công!");
+            Load_Click(sender, e);
+        }
+
+
+        private void delete_Click(object sender, EventArgs e)
+        {
+            if (bstRoot != null)
+            {
+                DateTime timestamp = db_published.Value;
+                bstRoot = bstRoot.Delete(currentBookID, timestamp);
+            }
+        
+            if (string.IsNullOrWhiteSpace(currentBookID))
+            {
+                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần xóa!");
+                return;
+            }
+
+            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa sách này?",
+                                                "Xác nhận xóa",
+                                                MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                var repo = new ClientReposity();
+                repo.DeleteBook(currentBookID); // Xóa trong CSDL
+
+                // Xóa trong BST
+                if (bstRoot != null)
+                {
+                    DateTime timestamp = db_published.Value;
+                    bstRoot = bstRoot.Delete(currentBookID, timestamp);
+                }
+
+                MessageBox.Show("Đã xóa sách thành công!");
+                Load_Click(sender, e); 
+            }
+        }
+
+
+        /* ---------------- panel & UI events (placeholder) ---------------- */
+        private void label2_Click(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
+        private void label5_Click(object sender, EventArgs e) { }
+        private void label4_Click(object sender, EventArgs e) { }
+        private void label6_Click(object sender, EventArgs e) { }
+        private void panel1_Paint(object sender, PaintEventArgs e) { }
+        private void panel3_Paint(object sender, PaintEventArgs e) { }
+        private void label1_Click(object sender, EventArgs e) { }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
     }
 }

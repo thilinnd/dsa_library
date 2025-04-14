@@ -1,8 +1,6 @@
-﻿using System;
+﻿using LibraryManagement;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 
 namespace LibraryManagement.Repositories
@@ -27,10 +25,67 @@ namespace LibraryManagement.Repositories
                     string name = reader["Name"].ToString();
                     string author = reader["Author"].ToString();
                     string category = reader["Category"].ToString();
+
                     books.Add(new Books(bookID, timestamp, name, author, category));
                 }
             }
             return books;
         }
+
+        public void AddBook(Books book)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO Books (Timestamp, Name, Author, Category) " +
+                               "VALUES (@Timestamp, @Name, @Author, @Category)";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Timestamp", book.Timestamp);
+                command.Parameters.AddWithValue("@Name", book.Name);
+                command.Parameters.AddWithValue("@Author", book.Author);
+                command.Parameters.AddWithValue("@Category", book.Category);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteBook(string bookID)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "DELETE FROM Books WHERE BookID = @BookID";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@BookID", bookID);
+                command.ExecuteNonQuery();
+            }
+        }
+
+
+
+        public void UpdateBook(Books book)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Books 
+                             SET Timestamp = @Timestamp, 
+                                 Name = @Name, 
+                                 Author = @Author, 
+                                 Category = @Category 
+                             WHERE BookID = @BookID";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Timestamp", book.Timestamp);
+                command.Parameters.AddWithValue("@Name", book.Name);
+                command.Parameters.AddWithValue("@Author", book.Author);
+                command.Parameters.AddWithValue("@Category", book.Category);
+                command.Parameters.AddWithValue("@BookID", book.BookID);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
     }
 }
