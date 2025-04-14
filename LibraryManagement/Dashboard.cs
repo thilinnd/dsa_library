@@ -65,6 +65,8 @@ namespace LibraryManagement
             }
         }
 
+
+
         private void booksTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -247,5 +249,103 @@ namespace LibraryManagement
         private void panel3_Paint(object sender, PaintEventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void SearchBooksInRange(Books node, DateTime from, DateTime to)
+        {
+            if (node == null) return;
+
+            // So sánh ngày (không cần quan tâm giờ)
+            if (node.Timestamp.Date > from)
+                SearchBooksInRange(node.Left, from, to);
+
+            if (node.Timestamp.Date >= from && node.Timestamp.Date <= to)
+            {
+                var row = dataTable.NewRow();
+                row["BookID"] = node.BookID;
+                row["Timestamp"] = node.Timestamp.ToString("yyyy-MM-dd");
+                row["Name"] = node.Name;
+                row["Author"] = node.Author;
+                row["Category"] = node.Category;
+                dataTable.Rows.Add(row);
+            }
+
+            if (node.Timestamp.Date < to)
+                SearchBooksInRange(node.Right, from, to);
+        }
+
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            if (bstRoot == null)
+            {
+                MessageBox.Show("Không có dữ liệu trong BST.");
+                return;
+            }
+
+            DateTime fromDate = dateTimefrom.Value.Date;
+            DateTime toDate = dateTimeto.Value.Date;
+
+            // KHÔNG cần cộng thêm giờ/phút vì Timestamp đã là ngày
+            dataTable.Clear();
+            SearchBooksInRange(bstRoot, fromDate, toDate);
+
+            if (dataTable.Rows.Count == 0)
+            {
+                MessageBox.Show("Không có sách nào trong khoảng thời gian đã chọn.");
+            }
+        }
+
+        private void BtnOldest_Click(object sender, EventArgs e)
+        {
+            if (bstRoot != null)
+            {
+                var oldest = bstRoot.FindOldest();
+
+                dataTable.Clear(); // Xóa dữ liệu cũ
+
+                var row = dataTable.NewRow();
+                row["BookID"] = oldest.BookID;
+                row["Timestamp"] = oldest.Timestamp.ToString("yyyy-MM-dd");
+                row["Name"] = oldest.Name;
+                row["Author"] = oldest.Author;
+                row["Category"] = oldest.Category;
+
+                dataTable.Rows.Add(row);
+            }
+        }
+
+        private void btnLatest_Click(object sender, EventArgs e)
+        {
+            if (bstRoot != null)
+            {
+                var latest = bstRoot.FindLatest();
+
+                dataTable.Clear();
+
+                var row = dataTable.NewRow();
+                row["BookID"] = latest.BookID;
+                row["Timestamp"] = latest.Timestamp.ToString("yyyy-MM-dd");
+                row["Name"] = latest.Name;
+                row["Author"] = latest.Author;
+                row["Category"] = latest.Category;
+
+                dataTable.Rows.Add(row);
+            }
+        }
+
+        private void dateTimefrom_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimeto_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LibraryManagement
 {
@@ -99,6 +100,26 @@ namespace LibraryManagement
 
             return this;
         }
+
+        // Tìm sách có ngày xuất bản sớm nhất (node trái nhất)
+        public Books FindOldest()
+        {
+            Books current = this;
+            while (current.Left != null)
+                current = current.Left;
+            return current;
+        }
+
+        // Tìm sách có ngày xuất bản muộn nhất (node phải nhất)
+        public Books FindLatest()
+        {
+            Books current = this;
+            while (current.Right != null)
+                current = current.Right;
+            return current;
+        }
+
+
 
     }
 
