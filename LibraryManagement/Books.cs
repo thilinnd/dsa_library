@@ -32,19 +32,19 @@ namespace LibraryManagement
 
         public void Insert(Books newBook)
         {
-            if (newBook.Timestamp < this.Timestamp)  
+            if (newBook.Timestamp < this.Timestamp)
             {
                 if (this.Left == null)
                     this.Left = newBook;
                 else
-                    this.Left.Insert(newBook); 
+                    this.Left.Insert(newBook);
             }
-            else  
+            else
             {
                 if (this.Right == null)
                     this.Right = newBook;
                 else
-                    this.Right.Insert(newBook); 
+                    this.Right.Insert(newBook);
             }
         }
 
@@ -52,10 +52,10 @@ namespace LibraryManagement
         public void InOrderTraversal(Action<Books> action)
         {
             if (this.Left != null)
-                this.Left.InOrderTraversal(action); 
-            action(this); 
+                this.Left.InOrderTraversal(action);
+            action(this);
             if (this.Right != null)
-                this.Right.InOrderTraversal(action); 
+                this.Right.InOrderTraversal(action);
         }
 
         public Books Delete(string bookID, DateTime timestamp)
@@ -167,10 +167,6 @@ namespace LibraryManagement
             if (Right != null) Right.FilterBooks(title, author, category, action);
         }
         
-
-
-
-
     }
 
 

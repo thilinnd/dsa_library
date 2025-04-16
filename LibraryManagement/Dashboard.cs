@@ -44,6 +44,7 @@ namespace LibraryManagement
 
         private void LoadData()
         {
+
             dataTable.Clear();
             bstRoot = null;
 
@@ -125,7 +126,7 @@ namespace LibraryManagement
         {
             if (bstRoot == null)
             {
-                MessageBox.Show("Vui lòng nhấn Load trước khi sắp xếp.");
+                MessageBox.Show("Please click Load before sorting.");
                 return;
             }
 
@@ -147,7 +148,7 @@ namespace LibraryManagement
         {
             if (string.IsNullOrWhiteSpace(currentName))
             {
-                MessageBox.Show("Vui lòng nhập Tên sách!");
+                MessageBox.Show("Please enter Book Name!");
                 return;
             }
 
@@ -158,7 +159,7 @@ namespace LibraryManagement
             var repo = new ClientReposity();
             repo.AddBook(newBook);
 
-            MessageBox.Show("Đã thêm sách thành công!");
+            MessageBox.Show("Book added successfully!");
             Load_Click(sender, e);
         }
 
@@ -167,12 +168,12 @@ namespace LibraryManagement
         {
             if (string.IsNullOrWhiteSpace(currentBookID))
             {
-                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần cập nhật!");
+                MessageBox.Show("Please enter or select the Book ID to update!");
                 return;
             }
 
-            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn cập nhật sách này?",
-                                                "Xác nhận cập nhật",
+            var confirmResult = MessageBox.Show("Are you sure you want to update this book?",
+                                                "Confirm update",
                                                 MessageBoxButtons.YesNo);
             if (confirmResult != DialogResult.Yes)
                 return;
@@ -200,7 +201,7 @@ namespace LibraryManagement
                 bstRoot.Insert(updatedBook);
             }
 
-            MessageBox.Show("Cập nhật sách thành công!");
+            MessageBox.Show("Book update successfully!");
             Load_Click(sender, e);
         }
 
@@ -215,12 +216,12 @@ namespace LibraryManagement
         
             if (string.IsNullOrWhiteSpace(currentBookID))
             {
-                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần xóa!");
+                MessageBox.Show("Please enter or select the Book ID to delete!");
                 return;
             }
 
-            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa sách này?",
-                                                "Xác nhận xóa",
+            var confirmResult = MessageBox.Show("Are you sure you want to delete this book?",
+                                                "Confirm deletion",
                                                 MessageBoxButtons.YesNo);
 
             if (confirmResult == DialogResult.Yes)
@@ -235,7 +236,7 @@ namespace LibraryManagement
                     bstRoot = bstRoot.Delete(currentBookID, timestamp);
                 }
 
-                MessageBox.Show("Đã xóa sách thành công!");
+                MessageBox.Show("Book deleted successfully!");
                 Load_Click(sender, e); 
             }
         }
@@ -312,7 +313,7 @@ namespace LibraryManagement
 
             if (from > to)
             {
-                MessageBox.Show("Ngày bắt đầu phải trước ngày kết thúc.");
+                MessageBox.Show("The start date must be before the end date.");
                 return;
             }
 
@@ -334,7 +335,7 @@ namespace LibraryManagement
             }
             else
             {
-                MessageBox.Show("Không có sách nào trong cây.");
+                MessageBox.Show("There are no books in the tree.");
             }
 
 
@@ -347,7 +348,7 @@ namespace LibraryManagement
 
             if (from > to)
             {
-                MessageBox.Show("Ngày bắt đầu phải trước ngày kết thúc.");
+                MessageBox.Show("Start date must be before end date.");
                 return;
             }
 
@@ -358,7 +359,7 @@ namespace LibraryManagement
             // Load lại dữ liệu và cập nhật lại BST
             LoadData();
 
-            MessageBox.Show("Đã xóa sách trong khoảng thời gian.");
+            MessageBox.Show("Book deleted in time range.");
         }
 
         private void lb_Cat_Click(object sender, EventArgs e)
@@ -404,7 +405,7 @@ namespace LibraryManagement
             }
             else
             {
-                MessageBox.Show("Không có dữ liệu để tìm kiếm.");
+                MessageBox.Show("There is no data to search.");
             }
         }
 
@@ -439,7 +440,7 @@ namespace LibraryManagement
                 }
                 else
                 {
-                    MessageBox.Show("Không có dữ liệu để hiển thị.");
+                    MessageBox.Show("There is no data to show.");
                 }
             }
         }
@@ -475,7 +476,7 @@ namespace LibraryManagement
                 }
                 else
                 {
-                    MessageBox.Show("Không có dữ liệu để hiển thị.");
+                    MessageBox.Show("\"There is no data to show.");
                 }
             }
 
@@ -512,7 +513,7 @@ namespace LibraryManagement
                 }
                 else
                 {
-                    MessageBox.Show("Không có dữ liệu để hiển thị.");
+                    MessageBox.Show("There is no data to sh");
                 }
             }
         }
