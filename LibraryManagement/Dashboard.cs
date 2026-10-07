@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using LibraryManagement.Repositories;
+using System.Globalization;
 
 namespace LibraryManagement
 {
@@ -16,6 +17,7 @@ namespace LibraryManagement
     {
         private DataTable dataTable;
         private Books bstRoot;
+        private string sortBy = "Title"; 
         private string currentBookID = "";
         private string currentName = "";
         private string currentAuthor = "";
@@ -42,6 +44,7 @@ namespace LibraryManagement
 
         private void LoadData()
         {
+
             dataTable.Clear();
             bstRoot = null;
 
@@ -123,7 +126,7 @@ namespace LibraryManagement
         {
             if (bstRoot == null)
             {
-                MessageBox.Show("Vui lòng nhấn Load trước khi sắp xếp.");
+                MessageBox.Show("Please click Load before sorting.");
                 return;
             }
 
@@ -145,7 +148,7 @@ namespace LibraryManagement
         {
             if (string.IsNullOrWhiteSpace(currentName))
             {
-                MessageBox.Show("Vui lòng nhập Tên sách!");
+                MessageBox.Show("Please enter Book Name!");
                 return;
             }
 
@@ -156,7 +159,7 @@ namespace LibraryManagement
             var repo = new ClientReposity();
             repo.AddBook(newBook);
 
-            MessageBox.Show("Đã thêm sách thành công!");
+            MessageBox.Show("Book added successfully!");
             Load_Click(sender, e);
         }
 
@@ -165,12 +168,12 @@ namespace LibraryManagement
         {
             if (string.IsNullOrWhiteSpace(currentBookID))
             {
-                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần cập nhật!");
+                MessageBox.Show("Please enter or select the Book ID to update!");
                 return;
             }
 
-            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn cập nhật sách này?",
-                                                "Xác nhận cập nhật",
+            var confirmResult = MessageBox.Show("Are you sure you want to update this book?",
+                                                "Confirm update",
                                                 MessageBoxButtons.YesNo);
             if (confirmResult != DialogResult.Yes)
                 return;
@@ -198,7 +201,7 @@ namespace LibraryManagement
                 bstRoot.Insert(updatedBook);
             }
 
-            MessageBox.Show("Cập nhật sách thành công!");
+            MessageBox.Show("Book update successfully!");
             Load_Click(sender, e);
         }
 
@@ -213,12 +216,12 @@ namespace LibraryManagement
         
             if (string.IsNullOrWhiteSpace(currentBookID))
             {
-                MessageBox.Show("Vui lòng nhập hoặc chọn Mã sách cần xóa!");
+                MessageBox.Show("Please enter or select the Book ID to delete!");
                 return;
             }
 
-            var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa sách này?",
-                                                "Xác nhận xóa",
+            var confirmResult = MessageBox.Show("Are you sure you want to delete this book?",
+                                                "Confirm deletion",
                                                 MessageBoxButtons.YesNo);
 
             if (confirmResult == DialogResult.Yes)
@@ -233,7 +236,7 @@ namespace LibraryManagement
                     bstRoot = bstRoot.Delete(currentBookID, timestamp);
                 }
 
-                MessageBox.Show("Đã xóa sách thành công!");
+                MessageBox.Show("Book deleted successfully!");
                 Load_Click(sender, e); 
             }
         }
@@ -255,58 +258,13 @@ namespace LibraryManagement
 
         }
 
-        private void SearchBooksInRange(Books node, DateTime from, DateTime to)
-        {
-            if (node == null) return;
-
-            // So sánh ngày (không cần quan tâm giờ)
-            if (node.Timestamp.Date > from)
-                SearchBooksInRange(node.Left, from, to);
-
-            if (node.Timestamp.Date >= from && node.Timestamp.Date <= to)
-            {
-                var row = dataTable.NewRow();
-                row["BookID"] = node.BookID;
-                row["Timestamp"] = node.Timestamp.ToString("yyyy-MM-dd");
-                row["Name"] = node.Name;
-                row["Author"] = node.Author;
-                row["Category"] = node.Category;
-                dataTable.Rows.Add(row);
-            }
-
-            if (node.Timestamp.Date < to)
-                SearchBooksInRange(node.Right, from, to);
-        }
-
-
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            if (bstRoot == null)
-            {
-                MessageBox.Show("Không có dữ liệu trong BST.");
-                return;
-            }
-
-            DateTime fromDate = dateTimefrom.Value.Date;
-            DateTime toDate = dateTimeto.Value.Date;
-
-            // KHÔNG cần cộng thêm giờ/phút vì Timestamp đã là ngày
-            dataTable.Clear();
-            SearchBooksInRange(bstRoot, fromDate, toDate);
-
-            if (dataTable.Rows.Count == 0)
-            {
-                MessageBox.Show("Không có sách nào trong khoảng thời gian đã chọn.");
-            }
-        }
-
         private void BtnOldest_Click(object sender, EventArgs e)
         {
             if (bstRoot != null)
             {
                 var oldest = bstRoot.FindOldest();
 
-                dataTable.Clear(); // Xóa dữ liệu cũ
+                dataTable.Clear(); 
 
                 var row = dataTable.NewRow();
                 row["BookID"] = oldest.BookID;
@@ -347,5 +305,220 @@ namespace LibraryManagement
         {
 
         }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            DateTime from = dateTimefrom.Value.Date;
+            DateTime to = dateTimeto.Value.Date;
+
+            if (from > to)
+            {
+                MessageBox.Show("The start date must be before the end date.");
+                return;
+            }
+
+            // Xóa dữ liệu cũ
+            dataTable.Clear();
+
+            if (bstRoot != null)
+            {
+                bstRoot.PrintInRange(from, to, book =>
+                {
+                    var row = dataTable.NewRow();
+                    row["BookID"] = book.BookID;
+                    row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                    row["Name"] = book.Name;
+                    row["Author"] = book.Author;
+                    row["Category"] = book.Category;
+                    dataTable.Rows.Add(row);
+                });
+            }
+            else
+            {
+                MessageBox.Show("There are no books in the tree.");
+            }
+
+
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            DateTime from = dateTimefrom.Value.Date;
+            DateTime to = dateTimeto.Value.Date;
+
+            if (from > to)
+            {
+                MessageBox.Show("Start date must be before end date.");
+                return;
+            }
+
+            // Xóa trong database
+            var repo = new ClientReposity();
+            repo.DeleteBooksInRange(from, to);
+
+            // Load lại dữ liệu và cập nhật lại BST
+            LoadData();
+
+            MessageBox.Show("Book deleted in time range.");
+        }
+
+        private void lb_Cat_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void booktitle_right_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void author_right_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Category_right_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void filter_Click(object sender, EventArgs e)
+        {
+            string title = booktitle_right.Text.Trim();
+            string author = author_right.Text.Trim();
+            string category = Category_right.Text.Trim();
+
+            dataTable.Clear();
+
+            if (bstRoot != null)
+            {
+                bstRoot.FilterBooks(title, author, category, book =>
+                {
+                    var row = dataTable.NewRow();
+                    row["BookID"] = book.BookID;
+                    row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                    row["Name"] = book.Name;
+                    row["Author"] = book.Author;
+                    row["Category"] = book.Category;
+                    dataTable.Rows.Add(row);
+                });
+            }
+            else
+            {
+                MessageBox.Show("There is no data to search.");
+            }
+        }
+
+        private void radio_title_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radio_title.Checked)
+            {
+                sortBy = "Title";
+                dataTable.Clear();
+
+                if (bstRoot != null)
+                {
+                    List<Books> allBooks = new List<Books>();
+
+                    // Duyệt cây và thêm toàn bộ sách vào danh sách
+                    bstRoot.InOrderTraversal(book => allBooks.Add(book));
+
+                    // Sắp xếp danh sách theo Title (từ điển)
+                    var sortedBooks = allBooks.OrderBy(b => b.Name).ToList();
+
+                    // Đổ dữ liệu vào dataTable
+                    foreach (var book in sortedBooks)
+                    {
+                        var row = dataTable.NewRow();
+                        row["BookID"] = book.BookID;
+                        row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                        row["Name"] = book.Name;
+                        row["Author"] = book.Author;
+                        row["Category"] = book.Category;
+                        dataTable.Rows.Add(row);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("There is no data to show.");
+                }
+            }
+        }
+
+        private void radio_author_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radio_author.Checked)
+            {
+                sortBy = "Author";
+                dataTable.Clear();
+
+                if (bstRoot != null)
+                {
+                    List<Books> allBooks = new List<Books>();
+
+                    // Duyệt cây và thêm toàn bộ sách vào danh sách
+                    bstRoot.InOrderTraversal(book => allBooks.Add(book));
+
+                    // Sắp xếp danh sách theo Author (từ điển)
+                    var sortedBooks = allBooks.OrderBy(b => b.Author).ToList();
+
+                    // Đổ dữ liệu vào dataTable
+                    foreach (var book in sortedBooks)
+                    {
+                        var row = dataTable.NewRow();
+                        row["BookID"] = book.BookID;
+                        row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                        row["Name"] = book.Name;
+                        row["Author"] = book.Author;
+                        row["Category"] = book.Category;
+                        dataTable.Rows.Add(row);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("\"There is no data to show.");
+                }
+            }
+
+        }
+
+        private void radio_category_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radio_category.Checked)
+            {
+                sortBy = "Category";
+                dataTable.Clear();
+
+                if (bstRoot != null)
+                {
+                    List<Books> allBooks = new List<Books>();
+
+                    // Duyệt cây và thêm toàn bộ sách vào danh sách
+                    bstRoot.InOrderTraversal(book => allBooks.Add(book));
+
+                    // Sắp xếp danh sách theo Category (từ điển)
+                    var sortedBooks = allBooks.OrderBy(b => b.Category).ToList();
+
+                    // Đổ dữ liệu vào dataTable
+                    foreach (var book in sortedBooks)
+                    {
+                        var row = dataTable.NewRow();
+                        row["BookID"] = book.BookID;
+                        row["Timestamp"] = book.Timestamp.ToString("yyyy-MM-dd");
+                        row["Name"] = book.Name;
+                        row["Author"] = book.Author;
+                        row["Category"] = book.Category;
+                        dataTable.Rows.Add(row);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("There is no data to sh");
+                }
+            }
+        }
+
     }
 }
+
+
